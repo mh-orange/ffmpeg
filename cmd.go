@@ -1,7 +1,7 @@
 package vtil
 
 import (
-	"fmt"
+	"log"
 	"os/exec"
 
 	"github.com/mh-orange/cmd"
@@ -16,7 +16,7 @@ func init() {
 	for _, c := range []cmd.Command{ffmpeg, ffprobe} {
 		path, err := exec.LookPath(c.Path())
 		if err != nil {
-			panic(fmt.Sprintf("%v no such file or directory", c.Path()))
+			log.Printf("%v no such file or directory", c.Path())
 		}
 		c.SetPath(path)
 	}
