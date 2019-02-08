@@ -18,7 +18,7 @@
 //go:generate enumer -type=InterlaceType -json=true -transform=comment
 //go:generate enumer -type=MediaType -json=true -transform=comment
 
-package vtil
+package ffmpeg
 
 import (
 	"bytes"

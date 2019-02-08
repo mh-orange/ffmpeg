@@ -1,4 +1,4 @@
-package vtil
+package ffmpeg
 
 type TestTranscoder struct {
 	TranscodeErr error

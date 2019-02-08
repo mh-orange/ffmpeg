@@ -1,4 +1,4 @@
-package vtil
+package ffmpeg
 
 type CopyTranscoder struct {
 	transcoder *Transcoder

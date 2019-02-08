@@ -1,4 +1,4 @@
-package vtil
+package ffmpeg
 
 import (
 	"encoding/json"
