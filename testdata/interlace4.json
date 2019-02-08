@@ -1,0 +1,19 @@
+{
+  "repeatedFields": {
+    "neither": 840,
+    "top": 0,
+    "bottom": 0
+  },
+  "singleFrame": {
+    "tff": 0,
+    "bff": 0,
+    "progressive": 751,
+    "undetermined": 89
+  },
+  "multiFrame": {
+    "tff": 0,
+    "bff": 0,
+    "progressive": 836,
+    "undetermined": 4
+  }
+}

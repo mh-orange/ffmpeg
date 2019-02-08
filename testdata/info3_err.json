@@ -1,0 +1,218 @@
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+            "profile": "Main",
+            "codec_type": "video",
+            "codec_time_base": "639/38302",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": "710",
+            "height": 480,
+            "coded_width": 710,
+            "coded_height": 480,
+            "has_b_frames": 2,
+            "sample_aspect_ratio": "8:9",
+            "display_aspect_ratio": "71:54",
+            "pix_fmt": "yuv420p",
+            "level": 30,
+            "color_range": "tv",
+            "color_space": "smpte170m",
+            "color_transfer": "bt709",
+            "color_primaries": "smpte170m",
+            "chroma_location": "left",
+            "field_order": "progressive",
+            "refs": 1,
+            "is_avc": "true",
+            "nal_length_size": "4",
+            "r_frame_rate": "19151/639",
+            "avg_frame_rate": "19151/639",
+            "time_base": "1/1000",
+            "start_pts": 0,
+            "start_time": "00:00:00.000000",
+            "bits_per_raw_sample": "8",
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "language": "eng"
+            }
+        },
+        {
+            "index": 1,
+            "codec_name": "ac3",
+            "codec_long_name": "ATSC A/52A (AC-3)",
+            "codec_type": "audio",
+            "codec_time_base": "1/48000",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "sample_fmt": "fltp",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 0,
+            "dmix_mode": "-1",
+            "ltrt_cmixlev": "-1.000000",
+            "ltrt_surmixlev": "-1.000000",
+            "loro_cmixlev": "-1.000000",
+            "loro_surmixlev": "-1.000000",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000",
+            "start_pts": 0,
+            "start_time": "0:00:00.000000",
+            "bit_rate": "192000",
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "language": "eng"
+            }
+        },
+        {
+            "index": 2,
+            "codec_name": "dvd_subtitle",
+            "codec_long_name": "DVD subtitles",
+            "codec_type": "subtitle",
+            "codec_time_base": "0/1",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": 720,
+            "height": 480,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000",
+            "start_pts": 0,
+            "start_time": "0:00:00.000000",
+            "duration_ts": 1544531,
+            "duration": "0:25:44.531000",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0
+            },
+            "tags": {
+                "language": "eng"
+            }
+        }
+    ],
+    "chapters": [
+        {
+            "id": 1176273091,
+            "time_base": "1/1000000000",
+            "start": 0,
+            "start_time": "0:00:00.000000",
+            "end": 148481666666,
+            "end_time": "0:02:28.481667",
+            "tags": {
+                "title": "Chapter  1"
+            }
+        },
+        {
+            "id": 1620728572,
+            "time_base": "1/1000000000",
+            "start": 148481666666,
+            "start_time": "0:02:28.481667",
+            "end": 464330533333,
+            "end_time": "0:07:44.330533",
+            "tags": {
+                "title": "Chapter  2"
+            }
+        },
+        {
+            "id": 1929323210,
+            "time_base": "1/1000000000",
+            "start": 464330533333,
+            "start_time": "0:07:44.330533",
+            "end": 521721200000,
+            "end_time": "0:08:41.721200",
+            "tags": {
+                "title": "Chapter  3"
+            }
+        },
+        {
+            "id": 1285291732,
+            "time_base": "1/1000000000",
+            "start": 521721200000,
+            "start_time": "0:08:41.721200",
+            "end": 975841533333,
+            "end_time": "0:16:15.841533",
+            "tags": {
+                "title": "Chapter  4"
+            }
+        },
+        {
+            "id": 1763474827,
+            "time_base": "1/1000000000",
+            "start": 975841533333,
+            "start_time": "0:16:15.841533",
+            "end": 1241261166666,
+            "end_time": "0:20:41.261167",
+            "tags": {
+                "title": "Chapter  5"
+            }
+        },
+        {
+            "id": 614973988,
+            "time_base": "1/1000000000",
+            "start": 1241261166666,
+            "start_time": "0:20:41.261167",
+            "end": 1544530750000,
+            "end_time": "0:25:44.530750",
+            "tags": {
+                "title": "Chapter  6"
+            }
+        }
+    ],
+    "format": {
+        "filename": "info1.mkv",
+        "nb_streams": 3,
+        "nb_programs": 0,
+        "format_name": "matroska,webm",
+        "format_long_name": "Matroska / WebM",
+        "start_time": "0:00:00.000000",
+        "duration": "0:25:44.530750",
+        "size": "328646371",
+        "bit_rate": "1702245",
+        "probe_score": 100,
+        "tags": {
+            "encoder": "libmkv 0.6.4.2"
+        }
+    }
+}

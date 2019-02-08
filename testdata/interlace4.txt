@@ -1,0 +1,29 @@
+Input #0, avi, from 'House - S01E01 - Pilot.avi':
+  Metadata:
+    encoder         : MEncoder SVN-r29237-4.4.1
+  Duration: 00:44:00.67, start: 0.000000, bitrate: 1901 kb/s
+    Stream #0:0: Video: h264 (Main) (h264 / 0x34363268), yuv420p(progressive), 720x352 [SAR 8:9 DAR 20:11], 1447 kb/s, SAR 360448:405495 DAR 16384:9011, 29.97 fps, 29.97 tbr, 29.97 tbn, 59.94 tbc
+    Stream #0:1: Audio: ac3 ([0] [0][0] / 0x2000), 48000 Hz, 5.1(side), fltp, 448 kb/s
+[Parsed_idet_0 @ 0x6236e40] Repeated Fields: Neither:     0 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 0x6236e40] Single frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 0x6236e40] Multi frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+Stream mapping:
+  Stream #0:0 (h264) -> idet (graph 0)
+  idet (graph 0) -> Stream #0:0 (wrapped_avframe)
+  Stream #0:1 -> #0:1 (ac3 (native) -> pcm_s16le (native))
+[ac3 @ 0x62368c0] frame sync error
+Error while decoding stream #0:1: Invalid data found when processing input
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf58.17.101
+    Stream #0:0: Video: wrapped_avframe, yuv420p, 720x352 [SAR 360448:405495 DAR 16384:9011], q=2-31, 200 kb/s, 29.97 fps, 29.97 tbn, 29.97 tbc
+    Metadata:
+      encoder         : Lavc58.22.100 wrapped_avframe
+    Stream #0:1: Audio: pcm_s16le, 48000 Hz, 5.1(side), s16, 4608 kb/s
+    Metadata:
+      encoder         : Lavc58.22.100 pcm_s16le
+frame=  840 fps=743 q=-0.0 Lsize=N/A time=00:00:35.00 bitrate=N/A speed=  31x    
+video:440kB audio:19688kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+[Parsed_idet_0 @ 0x63cb840] Repeated Fields: Neither:   840 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 0x63cb840] Single frame detection: TFF:     0 BFF:     0 Progressive:   751 Undetermined:    89
+[Parsed_idet_0 @ 0x63cb840] Multi frame detection: TFF:     0 BFF:     0 Progressive:   836 Undetermined:     4
