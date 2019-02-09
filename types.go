@@ -53,17 +53,20 @@ const (
 	// ColorSpaceUnspecified indicates that the color space encoding is not specified in the stream
 	ColorSpaceUnspecified // unknown
 
-	// ColorSpaceReserved
+	// ColorSpaceReserved is reserved :)
 	ColorSpaceReserved // reserved
 
+	// ColorSpaceFcc is a color space conforming to US Federal Communication Commission CFR Title 47 section 73.682
 	ColorSpaceFcc // fcc
 
+	// ColorSpaceBT470Bg is a color space conforming to the International Telecommunications Union BT.470 System B,G
 	ColorSpaceBT470Bg // bt470bg
 
 	ColorSpaceSMPTE170M // smpte170m
 
 	ColorSpaceSMPTE240M // smpte240m
 
+	// ColorSpaceYCoCg is a color space combining luminance with chroma green and chroma orange
 	ColorSpaceYCoCg // ycgco
 
 	// ColorSpaceBT2020Nc indicates ultra high definition non-constant luminance color
