@@ -4,11 +4,14 @@ import (
 	"io"
 )
 
+// TransocderOutput is an Option that can be used for the output of the transcoder
 type TranscoderOutput interface {
 	TranscoderOption
 	output() *output
 }
 
+// OutputOption is an option that is applied to a TranscoderOutput these are useful
+// for setting things like output format, output codec, etc
 type OutputOption func(*output) error
 
 type output struct {
@@ -60,10 +63,12 @@ func (out *output) process(job *transcodeJob) error {
 	return nil
 }
 
+// Output returns a TranscoderOutput with the given output options
 func Output(options ...OutputOption) TranscoderOutput {
 	return &output{options: options}
 }
 
+// DefaultH264 sets the Output video codec to libx264 using the medium preset and film tuning
 func DefaultH264() OutputOption {
 	return func(output *output) error {
 		output.vCodec = "libx264"
@@ -72,6 +77,7 @@ func DefaultH264() OutputOption {
 	}
 }
 
+// DefaultMatroska sets the output to use the matroska format
 func DefaultMatroska() OutputOption {
 	return func(output *output) error {
 		output.format = "matroska"
@@ -80,6 +86,7 @@ func DefaultMatroska() OutputOption {
 	}
 }
 
+// OutputFilename sets the output to write to a file named by the filename string
 func OutputFilename(filename string) OutputOption {
 	return func(output *output) error {
 		output.filename = filename
@@ -87,6 +94,7 @@ func OutputFilename(filename string) OutputOption {
 	}
 }
 
+// OutputWriter will send the transcoder output to the given io.Writer
 func OutputWriter(writer io.Writer) OutputOption {
 	return func(output *output) error {
 		output.writer = writer
@@ -94,6 +102,7 @@ func OutputWriter(writer io.Writer) OutputOption {
 	}
 }
 
+// CopyAudioOption will set the audio codec to "copy"
 func CopyAudioOption() OutputOption {
 	return func(output *output) error {
 		output.aCodec = "copy"
@@ -101,6 +110,7 @@ func CopyAudioOption() OutputOption {
 	}
 }
 
+// CopyOutput sets both the audio and video codecs to copy
 func CopyOutput() OutputOption {
 	return func(output *output) error {
 		output.aCodec = "copy"
@@ -109,6 +119,8 @@ func CopyOutput() OutputOption {
 	}
 }
 
+// OutputFormat sets the output format to the format string.  No checking
+// is done to make sure the format string is valid
 func OutputFormat(format string) OutputOption {
 	return func(output *output) error {
 		output.format = format

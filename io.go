@@ -13,11 +13,6 @@ var (
 	statsPtrn      = regexp.MustCompile(`^frame=\s*[^\s]+\s+fps=\s*[^\s]+\s+q=\s*[^\s]+\s+L?size=\s*[^\s]+\s+time=\s*[^\s]+\s+bitrate=\s*[^\s]+\s+speed=\s*[^\s]+$`)
 	finalStatsPtrn = regexp.MustCompile(`^video:[^\s]+\s+audio:[^\s]+\s+subtitle:[^\s]+\s+other\s+streams:[^\s]+\s+global\s+headers:[^\s]+\s+muxing\s+overhead:\s+[^\s]+$`)
 	repeatPtrn     = regexp.MustCompile(`^Last message repeated`)
-
-	PROGRESS    = 0x01
-	STATS       = 0x02
-	FINAL_STATS = 0x04
-	OTHER       = 0x08
 )
 
 type filterReader struct {
@@ -33,7 +28,7 @@ func newFilterReader(reader io.Reader, patterns ...*regexp.Regexp) *filterReader
 		scanner:  bufio.NewScanner(reader),
 		patterns: patterns,
 	}
-	fr.scanner.Split(ScanLines)
+	fr.scanner.Split(scanLines)
 	return fr
 }
 
@@ -68,7 +63,7 @@ func (fr *filterReader) Err() error {
 	return fr.err
 }
 
-func ScanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
+func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if atEOF && len(data) == 0 {
 		return 0, nil, nil
 	}
