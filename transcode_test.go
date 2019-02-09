@@ -21,7 +21,7 @@ func TestTranscoderTranscode(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			optionCalled := false
-			option := TranscoderOptionFunc(func(job *transcodeJob) error {
+			option := transcoderOptionFunc(func(job *transcodeJob) error {
 				optionCalled = true
 				return nil
 			})

@@ -186,13 +186,13 @@ func TestInterlaceTranscode(t *testing.T) {
 				t.Fatalf("Unexpected error: %v", err)
 			}
 
-			inputJson, err := ioutil.ReadFile(jsonFile)
+			inputJSON, err := ioutil.ReadFile(jsonFile)
 			if err != nil {
 				t.Fatalf("Unexpected error: %v", err)
 			}
 
 			want := InterlaceInfo{}
-			err = json.Unmarshal(inputJson, &want)
+			err = json.Unmarshal(inputJSON, &want)
 			if err != nil {
 				t.Fatalf("Unexpected error: %v", err)
 			}

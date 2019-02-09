@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-// TransocderOutput is an Option that can be used for the output of the transcoder
+// TranscoderOutput is an Option that can be used for the output of the transcoder
 type TranscoderOutput interface {
 	TranscoderOption
 	output() *output
