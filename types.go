@@ -43,6 +43,8 @@ const (
 // ColorSpace indicates the way colors and pixels are arranged in the pixel buffer
 type ColorSpace int
 
+// The following definitions match the different colorspaces that ffmpeg handles.  The
+// colorspaces are derived from the av_get_colorspace_name function in libavutil
 const (
 	// ColorSpaceRGB indicates standard Red, Green, Blue color space
 	ColorSpaceRGB ColorSpace = iota // gbr
@@ -53,7 +55,6 @@ const (
 	// ColorSpaceUnspecified indicates that the color space encoding is not specified in the stream
 	ColorSpaceUnspecified // unknown
 
-	// ColorSpaceReserved is reserved :)
 	ColorSpaceReserved // reserved
 
 	// ColorSpaceFcc is a color space conforming to US Federal Communication Commission CFR Title 47 section 73.682

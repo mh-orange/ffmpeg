@@ -10,15 +10,24 @@ import (
 )
 
 var (
+	// ErrShortStream is returned if a video stream does not contain enough frames to make a determination
+	// of interlaced or not
 	ErrShortStream = errors.New("stream was too short to process")
 )
 
+// InterlaceRepeatedInfo is the structure containing counts of repeated fields
 type InterlaceRepeatedInfo struct {
+	// Neither is the count of frames where no fields were repeated
 	Neither int `json:"neither"`
-	Top     int `json:"top"`
-	Bottom  int `json:"bottom"`
+
+	// Top is the count of frames where the top field was repeated
+	Top int `json:"top"`
+
+	// Bottom is the count of frames where the bottom field was repeated
+	Bottom int `json:"bottom"`
 }
 
+// Frames returns the total number of frames processed (neither + top + bottom)
 func (iri *InterlaceRepeatedInfo) Frames() int { return iri.Neither + iri.Top + iri.Bottom }
 
 func (iri *InterlaceRepeatedInfo) parse(text []byte) (err error) {
@@ -95,8 +104,12 @@ func (ii InterlaceInfo) Undetermined() int {
 	return ii.SingleFrame.Undetermined + ii.MultiFrame.Undetermined
 }
 
+// Frames is an alias for InterlaceInfo.RepeatedFields.Frames
 func (ii InterlaceInfo) Frames() int { return ii.RepeatedFields.Frames() }
 
+// Type returns the InterlaceType that is represented in the data provided to the InterlaceInfo
+// object.  If there are less than 250 frames represented then an ErrShortStream is returned.  The
+// determination is made only when Determined is greater than Undetermined frames
 func (ii InterlaceInfo) Type() (t InterlaceType, err error) {
 	if ii.Frames() < 250 {
 		err = ErrShortStream
@@ -117,9 +130,12 @@ func (ii InterlaceInfo) Type() (t InterlaceType, err error) {
 	return
 }
 
+// InterlaceTranscoder will set up the underlying ffmpeg command to process files with the idet filter (for
+// detecting interlacing) or the yadif filter (for deinterlacing)
 type InterlaceTranscoder struct {
 }
 
+// NewInterlaceTranscoder returns a transcoder that is ready for detection and deinterlacing
 func NewInterlaceTranscoder() *InterlaceTranscoder {
 	return &InterlaceTranscoder{}
 }
@@ -145,11 +161,14 @@ func (it *InterlaceTranscoder) transcode(input TranscoderInput, options ...Trans
 	return info, err
 }
 
+// Deinterlace takes the provided input, applies a deinterlacing filter and writes to the provided output
 func (it *InterlaceTranscoder) Deinterlace(input TranscoderInput, output TranscoderOutput) (TranscodeJob, error) {
 	transcoder := NewTranscoder()
 	return transcoder.Transcode(input, VideoFilterOption("yadif"), output)
 }
 
+// Detect will attempt to process the TranscoderInput and determine if it is interlaced or not.  The
+// transcoder will seek to a point 35% into the stream and process at most 35 seconds of video
 func (it *InterlaceTranscoder) Detect(input TranscoderInput) (t InterlaceType, err error) {
 	input.input().options = append(input.input().options, StartPercentOption(35), DurationOption(35*Second))
 	info, err := it.transcode(input, VideoFilterOption("idet"))
@@ -178,6 +197,9 @@ func (it *InterlaceTranscoder) Detect(input TranscoderInput) (t InterlaceType, e
 	return t, err
 }
 
+// IsInterlaced attempts to process the named file and return whether or not the algorithm believes
+// the file is interlaced.  If the input does not have a video stream or if the video stream is shorter
+// than 250 frames then an error is returned (ErrShortStream for the latter case).
 func IsInterlaced(filename string) (isInterlaced bool, err error) {
 	transcoder := NewInterlaceTranscoder()
 	t, err := transcoder.Detect(Input(InputFilename(filename)))
