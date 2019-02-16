@@ -20,25 +20,49 @@ import (
 	"fmt"
 )
 
+// ProgramInfo is information about programs and their streams, returned by ffprobe
 type ProgramInfo struct {
 }
 
+// StreamInfo is the information from ffprobe about individual streams contained in some
+// media
 type StreamInfo struct {
-	Index          int               `json:"index"`
-	CodecType      MediaType         `json:"codec_type"`
-	CodecName      string            `json:"codec_name"`
-	CodecLongName  string            `json:"codec_long_name"`
-	Profile        string            `json:"profile"`
-	CodecTimeBase  TimeBase          `json:"codec_time_base"`
-	CodecTagString string            `json:"codec_tag_string"`
-	CodecTag       string            `json:"codec_tag"`
-	RFrameRate     FrameRate         `json:"r_frame_rate"`
-	AvgFrameRate   FrameRate         `json:"avg_frame_rate"`
-	TimeBase       TimeBase          `json:"time_base"`
-	StartPts       PTS               `json:"pts"`
-	Duration       Time              `json:"duration"`
-	Disposition    DispositionInfo   `json:"disposition"`
-	Tags           map[string]string `json:"tags"`
+	// Index is the stream index for this stream
+	Index int `json:"index"`
+
+	// CodecType indicates if the media is video, audio or subtitle
+	CodecType MediaType `json:"codec_type"`
+
+	// CodecName is a string representation of the codec (h264, for instance)
+	CodecName string `json:"codec_name"`
+
+	// CodecLongName is an extended version of the CodecName
+	CodecLongName string `json:"codec_long_name"`
+
+	// Profile
+	Profile string `json:"profile"`
+
+	// CodecTimeBase indicates the time base (relative to seconds) for the codec
+	CodecTimeBase TimeBase `json:"codec_time_base"`
+
+	CodecTagString string `json:"codec_tag_string"`
+
+	CodecTag string `json:"codec_tag"`
+
+	RFrameRate FrameRate `json:"r_frame_rate"`
+
+	AvgFrameRate FrameRate `json:"avg_frame_rate"`
+
+	// TimeBase indicates the time base (relative to seconds) for the format/container. TODO: Confirm this meaning
+	TimeBase TimeBase `json:"time_base"`
+
+	// StartPts indicates the Program Time Stamp (PTS) at the start of the stream
+	StartPts PTS `json:"pts"`
+
+	// Duration is the length of the stream
+	Duration Time `json:"duration"`
+
+	Disposition DispositionInfo `json:"disposition"`
 }
 
 type VideoStreamInfo struct {
@@ -95,39 +119,68 @@ type DispositionInfo struct {
 }
 
 type ChapterInfo struct {
-	ID    int               `json:"id"`
-	Start Time              `json:"start_time"`
-	End   Time              `json:"end_time"`
-	Tags  map[string]string `json:"tags"`
+	ID    int  `json:"id"`
+	Start Time `json:"start_time"`
+	End   Time `json:"end_time"`
 }
 
+// FormatInfo is everything we know about the format (container) of the file
 type FormatInfo struct {
-	Filename       string            `json:"filename"`
-	NbStreams      int               `json:"nb_streams"`
-	NbPrograms     int               `json:"nb_programs"`
-	FormatName     string            `json:"format_name"`
-	FormatLongName string            `json:"format_long_name"`
-	StartTime      Time              `json:"start_time"`
-	Duration       Time              `json:"duration"`
-	Size           string            `json:"size"`
-	BitRate        string            `json:"bit_rate"`
-	ProbeScore     int               `json:"probe_score"`
-	Tags           map[string]string `json:"tags"`
+	// Filename is the URL/Filename that was passed to the ffprobe command
+	Filename string `json:"filename"`
+
+	// FormatName is a string representation of the format, such as "matroska"
+	FormatName string `json:"format_name"`
+
+	// FormatLongName is a descriptive version of the name
+	FormatLongName string `json:"format_long_name"`
+
+	// StartTime is the PTS of the first frame of the stream (in presentation order)
+	StartTime Time `json:"start_time"`
+
+	// Duration is the total length of the media
+	Duration Time `json:"duration"`
+
+	// Size is a string representation of the size of the file (size + unit)
+	Size string `json:"size"`
+
+	// BitRate is the total stream bitrate in bits/second
+	BitRate string `json:"bit_rate"`
+
+	// ProbeScore is a value between 0 and 100 that indicates how well ffprobe did when
+	// trying to determine what kind of media was contained in the file
+	ProbeScore int `json:"probe_score"`
 }
 
+// FileInfo is informational data about a given media file
 type FileInfo struct {
-	Programs        []*ProgramInfo `json:"Programs"`
-	VideoStreams    []*VideoStreamInfo
-	AudioStreams    []*AudioStreamInfo
+	// Programs is the list of information about all the programs contained in the media
+	Programs []*ProgramInfo `json:"Programs"`
+
+	// VideoStreams is the list of information about all video streams in the media
+	VideoStreams []*VideoStreamInfo
+
+	// AudioStreams is the list of information about all audio streams in the media
+	AudioStreams []*AudioStreamInfo
+
+	// SubtitleStreams is the list of information about all the subtitles in the media
 	SubtitleStreams []*SubtitleStreamInfo
-	Chapters        []*ChapterInfo `json:"Chapters"`
-	Format          FormatInfo     `json:"Formats"`
+
+	// Chapters is a list of all the chapters contained in the media
+	Chapters []*ChapterInfo `json:"Chapters"`
+
+	// Format is all the information relating to the container format
+	Format FormatInfo `json:"Formats"`
 }
 
+// IsVideo determines of the FileInfo represents video media by determining
+// if there is at least one video stream in the container
 func (fi *FileInfo) IsVideo() bool {
 	return len(fi.VideoStreams) > 0
 }
 
+// UnmarshalJSON takes the JSON string returned by ffprobe and parses it into
+// the FileInfo object
 func (fi *FileInfo) UnmarshalJSON(data []byte) error {
 	tmp := struct {
 		Programs []*ProgramInfo
@@ -177,6 +230,8 @@ func (fi *FileInfo) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// Stat will pass the filename to ffprobe and parse the output.  If no error occurs, then
+// a FileInfo containing all the stream, program and format information is returned
 func Stat(filename string) (fi *FileInfo, err error) {
 	proc := ffprobe.Process()
 	proc.AppendArgs(filename)
