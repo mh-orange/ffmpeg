@@ -49,6 +49,10 @@ func (out *output) process(job *transcodeJob) error {
 		job.proc.AppendArgs(out.aCodecOptions...)
 	}
 
+	if out.vCodec == "copy" || out.aCodec == "copy" {
+		job.proc.AppendArgs("-map", "0")
+	}
+
 	if out.format != "" {
 		job.proc.AppendArgs("-f", out.format)
 		job.proc.AppendArgs(out.formatOptions...)

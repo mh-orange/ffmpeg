@@ -131,7 +131,7 @@ func (ii InterlaceInfo) Type() (t InterlaceType, err error) {
 }
 
 // InterlaceTranscoder will set up the underlying ffmpeg command to process files with the idet filter (for
-// detecting interlacing) or the yadif filter (for deinterlacing)
+// detecting interlacing) or the bwdif filter (for deinterlacing)
 type InterlaceTranscoder struct {
 }
 
@@ -162,9 +162,16 @@ func (it *InterlaceTranscoder) transcode(input TranscoderInput, options ...Trans
 }
 
 // Deinterlace takes the provided input, applies a deinterlacing filter and writes to the provided output
-func (it *InterlaceTranscoder) Deinterlace(input TranscoderInput, output TranscoderOutput) (TranscodeJob, error) {
+func (it *InterlaceTranscoder) Deinterlace(t InterlaceType, input TranscoderInput, output TranscoderOutput) (TranscodeJob, error) {
 	transcoder := NewTranscoder()
-	return transcoder.Transcode(input, VideoFilterOption("yadif"), output)
+	options := "mode=1"
+	if t == InterlacedTff {
+		options = fmt.Sprintf("%s:parity=0", options)
+	} else if t == InterlacedBff {
+		options = fmt.Sprintf("%s:parity=1", options)
+	}
+
+	return transcoder.Transcode(input, VideoFilterOption(fmt.Sprintf("bwdif=%s", options)), output)
 }
 
 // Detect will attempt to process the TranscoderInput and determine if it is interlaced or not.  The
@@ -174,25 +181,6 @@ func (it *InterlaceTranscoder) Detect(input TranscoderInput) (t InterlaceType, e
 	info, err := it.transcode(input, VideoFilterOption("idet"))
 	if err == nil {
 		t, err = info.Type()
-		if t != Unknown && t != Progressive {
-			switch t {
-			case InterlacedTff:
-				info, err = it.transcode(input, VideoFilterOption("setfield=tff,pullup,idet"))
-			case InterlacedBff:
-				info, err = it.transcode(input, VideoFilterOption("setfield=bff,pullup,idet"))
-			case Interlaced:
-				info, err = it.transcode(input, VideoFilterOption("pullup,idet"))
-			}
-
-			if err == nil {
-				t, err = info.Type()
-				if t == Progressive {
-					t = Telecine
-				} else {
-					t = Interlaced
-				}
-			}
-		}
 	}
 	return t, err
 }
