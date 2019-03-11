@@ -26,7 +26,7 @@ type input struct {
 	Duration Time
 
 	fi      *FileInfo
-	file    io.ReadWriteSeeker
+	file    io.Reader
 	args    []string
 	options []InputOption
 }
