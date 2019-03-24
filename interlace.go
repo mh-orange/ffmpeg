@@ -162,23 +162,25 @@ func (it *InterlaceTranscoder) transcode(input TranscoderInput, options ...Trans
 }
 
 // Deinterlace takes the provided input, applies a deinterlacing filter and writes to the provided output
-func (it *InterlaceTranscoder) Deinterlace(t InterlaceType, input TranscoderInput, output TranscoderOutput) (TranscodeJob, error) {
+func (it *InterlaceTranscoder) Deinterlace(t InterlaceType, input TranscoderInput, output TranscoderOutput, options ...TranscoderOption) (TranscodeJob, error) {
 	transcoder := NewTranscoder()
-	options := "mode=1"
+	filter := "mode=1"
 	if t == InterlacedTff {
-		options = fmt.Sprintf("%s:parity=0", options)
+		filter = fmt.Sprintf("%s:parity=0", filter)
 	} else if t == InterlacedBff {
-		options = fmt.Sprintf("%s:parity=1", options)
+		filter = fmt.Sprintf("%s:parity=1", filter)
 	}
 
-	return transcoder.Transcode(input, VideoFilterOption(fmt.Sprintf("bwdif=%s", options)), output)
+	options = append([]TranscoderOption{input, VideoFilterOption(fmt.Sprintf("bwdif=%s", filter)), output}, options...)
+
+	return transcoder.Transcode(options...)
 }
 
 // Detect will attempt to process the TranscoderInput and determine if it is interlaced or not.  The
 // transcoder will seek to a point 35% into the stream and process at most 35 seconds of video
-func (it *InterlaceTranscoder) Detect(input TranscoderInput) (t InterlaceType, err error) {
+func (it *InterlaceTranscoder) Detect(input TranscoderInput, options ...TranscoderOption) (t InterlaceType, err error) {
 	input.input().options = append(input.input().options, StartPercentOption(35), DurationOption(35*Second))
-	info, err := it.transcode(input, VideoFilterOption("idet"))
+	info, err := it.transcode(input, append([]TranscoderOption{VideoFilterOption("idet")}, options...)...)
 	if err == nil {
 		t, err = info.Type()
 	}

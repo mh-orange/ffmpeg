@@ -23,6 +23,29 @@ func StderrOption(writer io.WriteCloser) TranscoderOption {
 	})
 }
 
+func LogOption(writer io.Writer) TranscoderOption {
+	return transcoderOptionFunc(func(job *transcodeJob) error {
+		pr, pw := io.Pipe()
+		job.proc.Stderr(pw)
+		reader := newFilterReader(pr, progPtrn, repeatPtrn)
+		go func() {
+			for {
+				if reader.Scan() {
+					if reader.Pattern() == nil {
+						writer.Write(reader.Bytes())
+					}
+				} else {
+					if reader.Err() != nil {
+						break
+					}
+				}
+			}
+		}()
+
+		return nil
+	})
+}
+
 // VideoFilterOption sets a video filter chain on a transcoder
 func VideoFilterOption(chaindef string) TranscoderOption {
 	return transcoderOptionFunc(func(job *transcodeJob) error {

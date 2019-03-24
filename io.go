@@ -59,6 +59,10 @@ func (fr *filterReader) Text() string {
 	return fr.text
 }
 
+func (fr *filterReader) Bytes() []byte {
+	return []byte(fr.text)
+}
+
 func (fr *filterReader) Err() error {
 	return fr.err
 }
