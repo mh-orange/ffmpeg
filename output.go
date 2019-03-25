@@ -24,6 +24,8 @@ type output struct {
 	vCodec        string
 	vCodecOptions []string
 
+	sCodec string
+
 	format        string
 	formatOptions []string
 
@@ -49,8 +51,8 @@ func (out *output) process(job *transcodeJob) error {
 		job.proc.AppendArgs(out.aCodecOptions...)
 	}
 
-	if out.vCodec == "copy" || out.aCodec == "copy" {
-		job.proc.AppendArgs("-map", "0")
+	if out.sCodec != "" {
+		job.proc.AppendArgs("-c:s", out.sCodec)
 	}
 
 	if out.format != "" {
@@ -110,6 +112,14 @@ func OutputWriter(writer io.Writer) OutputOption {
 func CopyAudioOption() OutputOption {
 	return func(output *output) error {
 		output.aCodec = "copy"
+		return nil
+	}
+}
+
+// CopySubtitlesOption will set the subtitle codec to copy
+func CopySubtitlesOption() OutputOption {
+	return func(output *output) error {
+		output.sCodec = "copy"
 		return nil
 	}
 }

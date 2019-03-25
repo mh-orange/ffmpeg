@@ -146,7 +146,11 @@ func (job *transcodeJob) run(cancelCh chan struct{}, doneCh chan struct{}, stder
 
 	job.err = job.proc.Wait()
 	if job.err != nil {
-		job.err = errors.New(strings.Join(job.log[len(job.log)-2:], "\n"))
+		if len(job.log) >= 2 {
+			job.err = errors.New(strings.Join(job.log[len(job.log)-2:], "\n"))
+		} else if len(job.log) == 1 {
+			job.err = errors.New(job.log[0])
+		}
 	}
 }
 
