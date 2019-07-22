@@ -24,6 +24,8 @@ type output struct {
 	vCodec        string
 	vCodecOptions []string
 
+	pix_fmt string
+
 	format        string
 	formatOptions []string
 
@@ -44,11 +46,16 @@ func (out *output) process(job *transcodeJob) error {
 		job.proc.AppendArgs(out.vCodecOptions...)
 	}
 
+	if out.pix_fmt != "" {
+		job.proc.AppendArgs("-pix_fmt", out.pix_fmt)
+	}
+
 	if out.aCodec != "" {
 		job.proc.AppendArgs("-c:a", out.aCodec)
 		job.proc.AppendArgs(out.aCodecOptions...)
 	}
 
+	job.proc.AppendArgs("-map_metadata", "0")
 	if out.vCodec == "copy" || out.aCodec == "copy" {
 		job.proc.AppendArgs("-map", "0")
 	}
@@ -70,6 +77,17 @@ func (out *output) process(job *transcodeJob) error {
 // Output returns a TranscoderOutput with the given output options
 func Output(options ...OutputOption) TranscoderOutput {
 	return &output{options: options}
+}
+
+func DefaultMpeg4() OutputOption {
+	return func(output *output) error {
+		err := DefaultH264()(output)
+		if err == nil {
+			err = AudioCodecOption("aac")(output)
+		}
+		output.pix_fmt = "yuv420p"
+		return err
+	}
 }
 
 // DefaultH264 sets the Output video codec to libx264 using the medium preset and film tuning
@@ -106,12 +124,16 @@ func OutputWriter(writer io.Writer) OutputOption {
 	}
 }
 
-// CopyAudioOption will set the audio codec to "copy"
-func CopyAudioOption() OutputOption {
+func AudioCodecOption(codec string) OutputOption {
 	return func(output *output) error {
-		output.aCodec = "copy"
+		output.aCodec = codec
 		return nil
 	}
+}
+
+// CopyAudioOption will set the audio codec to "copy"
+func CopyAudioOption() OutputOption {
+	return AudioCodecOption("copy")
 }
 
 // CopyOutput sets both the audio and video codecs to copy

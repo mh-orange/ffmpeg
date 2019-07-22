@@ -14,6 +14,7 @@ func (ct *CopyTranscoder) Transcode(input TranscoderInput, output TranscoderOutp
 
 func Copy(input TranscoderInput, output TranscoderOutput) error {
 	transcoder := NewCopyTranscoder()
+	output.output().options = append(output.output().options, CopyOutput())
 	job, err := transcoder.Transcode(input, output)
 	if err == nil {
 		err = job.Wait()

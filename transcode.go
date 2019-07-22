@@ -110,7 +110,6 @@ func (job *transcodeJob) run(cancelCh chan struct{}, doneCh chan struct{}, stder
 
 	values := make(map[string]string)
 	running := true
-	log := false
 
 	for running {
 		select {
@@ -119,10 +118,9 @@ func (job *transcodeJob) run(cancelCh chan struct{}, doneCh chan struct{}, stder
 			running = false
 		default:
 			if reader.Scan() {
-				if reader.Pattern() == nil && log {
+				if reader.Pattern() == nil {
 					job.log = append(job.log, reader.Text())
 				} else if reader.Pattern() == progPtrn {
-					log = true
 					tokens := strings.Split(reader.Text(), "=")
 					values[strings.TrimSpace(tokens[0])] = strings.TrimSpace(tokens[1])
 					if strings.TrimSpace(tokens[0]) == "progress" {
@@ -146,7 +144,11 @@ func (job *transcodeJob) run(cancelCh chan struct{}, doneCh chan struct{}, stder
 
 	job.err = job.proc.Wait()
 	if job.err != nil {
-		job.err = errors.New(strings.Join(job.log[len(job.log)-2:], "\n"))
+		if len(job.log) > 2 {
+			job.err = errors.New(strings.Join(job.log[len(job.log)-2:], "\n"))
+		} else {
+			job.err = errors.New(strings.Join(job.log, "\n"))
+		}
 	}
 }
 

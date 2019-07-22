@@ -33,22 +33,19 @@ func newFilterReader(reader io.Reader, patterns ...*regexp.Regexp) *filterReader
 }
 
 func (fr *filterReader) Scan() bool {
-	for fr.scanner.Scan() {
-		fr.pattern = nil
-		fr.text = strings.TrimSpace(fr.scanner.Text())
-		for _, pattern := range fr.patterns {
-			if pattern.MatchString(fr.text) {
-				fr.pattern = pattern
-				return true
-			}
+	ok := fr.scanner.Scan()
+	fr.pattern = nil
+	fr.text = strings.TrimSpace(fr.scanner.Text())
+	for _, pattern := range fr.patterns {
+		if pattern.MatchString(fr.text) {
+			fr.pattern = pattern
 		}
 	}
-
 	fr.err = fr.scanner.Err()
-	if fr.err == nil {
+	if !ok && fr.err == nil {
 		fr.err = io.EOF
 	}
-	return false
+	return ok
 }
 
 func (fr *filterReader) Pattern() *regexp.Regexp {

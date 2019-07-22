@@ -251,3 +251,13 @@ func Stat(filename string) (fi *FileInfo, err error) {
 	}
 	return fi, err
 }
+
+// IsVideo determines of the FileInfo represents video media by determining
+// if there is at least one video stream in the container
+func IsVideo(filename string) (bool, error) {
+	fi, err := Stat(filename)
+	if err == nil {
+		return len(fi.VideoStreams) > 0, nil
+	}
+	return false, err
+}
