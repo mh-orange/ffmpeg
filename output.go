@@ -25,6 +25,7 @@ type output struct {
 	vCodecOptions []string
 
 	pix_fmt string
+	sCodec  string
 
 	format        string
 	formatOptions []string
@@ -58,6 +59,10 @@ func (out *output) process(job *transcodeJob) error {
 	job.proc.AppendArgs("-map_metadata", "0")
 	if out.vCodec == "copy" || out.aCodec == "copy" {
 		job.proc.AppendArgs("-map", "0")
+	}
+
+	if out.sCodec != "" {
+		job.proc.AppendArgs("-c:s", out.sCodec)
 	}
 
 	if out.format != "" {
@@ -134,6 +139,14 @@ func AudioCodecOption(codec string) OutputOption {
 // CopyAudioOption will set the audio codec to "copy"
 func CopyAudioOption() OutputOption {
 	return AudioCodecOption("copy")
+}
+
+// CopySubtitlesOption will set the subtitle codec to copy
+func CopySubtitlesOption() OutputOption {
+	return func(output *output) error {
+		output.sCodec = "copy"
+		return nil
+	}
 }
 
 // CopyOutput sets both the audio and video codecs to copy
