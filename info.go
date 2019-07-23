@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 // ProgramInfo is information about programs and their streams, returned by ffprobe
@@ -176,7 +177,17 @@ type FileInfo struct {
 // IsVideo determines of the FileInfo represents video media by determining
 // if there is at least one video stream in the container
 func (fi *FileInfo) IsVideo() bool {
-	return len(fi.VideoStreams) > 0
+	if len(fi.VideoStreams) > 0 {
+		if strings.Index(fi.Format.FormatName, "pipe") >= 0 {
+			return false
+		} else if strings.Index(fi.Format.FormatName, "tty") >= 0 {
+			return false
+		} else if strings.Index(fi.Format.FormatName, "image2") >= 0 {
+			return false
+		}
+		return true
+	}
+	return false
 }
 
 // UnmarshalJSON takes the JSON string returned by ffprobe and parses it into
@@ -257,7 +268,7 @@ func Stat(filename string) (fi *FileInfo, err error) {
 func IsVideo(filename string) (bool, error) {
 	fi, err := Stat(filename)
 	if err == nil {
-		return len(fi.VideoStreams) > 0, nil
+		return fi.IsVideo(), nil
 	}
 	return false, err
 }
