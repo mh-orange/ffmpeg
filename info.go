@@ -257,7 +257,7 @@ func Stat(filename string) (fi *FileInfo, err error) {
 			fi = &FileInfo{}
 			err = json.Unmarshal(writer.Bytes(), fi)
 		} else {
-			err = fmt.Errorf("%s", string(logWriter.Bytes()))
+			err = fmt.Errorf("%s", strings.TrimSpace(logWriter.String()))
 		}
 	}
 	return fi, err
