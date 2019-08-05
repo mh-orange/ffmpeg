@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 // ColorRange indicates how the colors of the video stream are encoded
@@ -206,7 +207,7 @@ func (ite *InvalidTimeErr) Error() string {
 
 // Time is the relative time in nanoseconds. It is used to represent things
 // like chapter start and end times
-type Time uint64
+type Time int64
 
 const (
 	// Nanosecond is one billionth of a second.  A nanosecond is the basic unit
@@ -232,18 +233,26 @@ const (
 // Percent computes the correct percentage of time.  For instance, 10 percent of
 // 1 hour returns a time representing 6 minutes
 func (t Time) Percent(percent int) Time {
-	tt := uint64(t) / 100
-	tt *= uint64(percent)
+	tt := int64(t) / 100
+	tt *= int64(percent)
 	return Time(tt)
 }
 
 // Parse will take a time string in the form of "HH:MM:SS.mmmmmm" and assign
 // the values (hour, minute, second, milliseconds) to the Time receiver
 func (t *Time) Parse(str string) error {
-	hr, min, sec, ms := Time(0), Time(0), Time(0), Time(0)
-	_, err := fmt.Sscanf(str, `%d:%d:%d.%d`, &hr, &min, &sec, &ms)
+	negative := Time(1)
+	if strings.Index(str, "-") >= 0 {
+		str = strings.ReplaceAll(str, "-", "")
+		negative = Time(-1)
+	}
+
+	hr, min, sec := Time(0), Time(0), Time(0)
+	f := float64(0)
+	_, err := fmt.Sscanf(str, `%d:%d:%f`, &hr, &min, &f)
 	if err == nil {
-		*t = (hr * Hour) + (min * Minute) + (sec * Second) + (ms * Microsecond)
+		sec = Time(float64(Second) * f)
+		*t = negative * ((hr * Hour) + (min * Minute) + (sec))
 	} else {
 		err = &InvalidTimeErr{err}
 	}
@@ -269,10 +278,10 @@ func (t Time) String() string {
 	val -= (hr * Hour)
 	min := val / Minute
 	val -= (min * Minute)
-	sec := val / Second
-	val -= (sec * Second)
-	ms := val / Microsecond
-	return fmt.Sprintf("%02d:%02d:%02d.%06d", hr, min, sec, ms)
+	sec := float64(val) / float64(Second)
+	//val -= (sec * Second)
+	//ms := val / Microsecond
+	return fmt.Sprintf("%02d:%02d:%09.6f", hr, min, sec)
 }
 
 // MarshalJSON returns a properly formated JSON string representing the time

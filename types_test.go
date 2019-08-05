@@ -238,6 +238,7 @@ func TestTimeMarshal(t *testing.T) {
 	}{
 		{`"00:25:44.530750"`, false, Time(1544530750000)},
 		{`"Monday"`, true, Time(0)},
+		{`"00:00:-0.000023"`, false, Time(-23) * Microsecond},
 	}
 
 	for _, test := range tests {
@@ -251,10 +252,10 @@ func TestTimeMarshal(t *testing.T) {
 				if test.want == got {
 					data, _ = got.MarshalJSON()
 					if !bytes.Equal(data, []byte(test.input)) {
-						t.Errorf("Wanted %s got %s", test.input, string(data))
+						t.Errorf("Wanted marshalled string %s got %s", test.input, string(data))
 					}
 				} else {
-					t.Errorf("Wanted %+v got %+v", test.want, got)
+					t.Errorf("Wanted unmarshalled values %d got %d", test.want, got)
 				}
 			} else {
 				if te, ok := err.(*InvalidTimeErr); ok && test.wantErr {
