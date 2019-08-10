@@ -25,7 +25,11 @@ func TestInfoUnmarshalJSON(t *testing.T) {
 				c.Stdout = input
 				ffprobe = c
 				fi, err := Stat(name)
-				if strings.HasSuffix(name, "_err.json") {
+				if strings.HasSuffix(name, "_video.json") {
+					if !fi.IsVideo() {
+						t.Errorf("Expected the information to indicate that the media is a video")
+					}
+				} else if strings.HasSuffix(name, "_err.json") {
 					if err == nil {
 						t.Errorf("Expected parse error")
 					}
