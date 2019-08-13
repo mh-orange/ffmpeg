@@ -1,6 +1,7 @@
 package ffmpeg
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -58,6 +59,27 @@ func VideoFilterOption(chaindef string) TranscoderOption {
 func DiscardOption() TranscoderOption {
 	return transcoderOptionFunc(func(job *transcodeJob) error {
 		job.proc.AppendArgs("-f", "null", "-")
+		return nil
+	})
+}
+
+func MapOption(index int) TranscoderOption {
+	return transcoderOptionFunc(func(job *transcodeJob) error {
+		job.proc.AppendArgs("-map", fmt.Sprintf("%d", index))
+		return nil
+	})
+}
+
+func MapMetadataOption(index int) TranscoderOption {
+	return transcoderOptionFunc(func(job *transcodeJob) error {
+		job.proc.AppendArgs("-map_metadata", fmt.Sprintf("%d", index))
+		return nil
+	})
+}
+
+func DispositionOption(index int, disposition string) TranscoderOption {
+	return transcoderOptionFunc(func(job *transcodeJob) error {
+		job.proc.AppendArgs(fmt.Sprintf("-disposition:%d", index), disposition)
 		return nil
 	})
 }

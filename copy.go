@@ -17,3 +17,9 @@ func Copy(input TranscoderInput, output TranscoderOutput) (TranscodeJob, error) 
 	output.output().options = append(output.output().options, CopyOutput())
 	return transcoder.Transcode(input, output)
 }
+
+func UpdateMetadata(media TranscoderInput, metadata TranscoderInput, image TranscoderInput, output TranscoderOutput) (TranscodeJob, error) {
+	transcoder := NewTranscoder()
+	output.output().options = append(output.output().options, CopyOutput())
+	return transcoder.Transcode(media, metadata, image, MapOption(0), MapMetadataOption(1), MapOption(2), DispositionOption(2, "attached_pic"), output)
+}

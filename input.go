@@ -57,6 +57,9 @@ func (in *input) process(job *transcodeJob) (err error) {
 				in.args = append(in.args, "-i", in.URL.String())
 			} else if in.fi != nil {
 				in.args = append(in.args, "-i", in.fi.Format.Filename)
+			} else if in.file != nil {
+				job.proc.Stdin(in.file)
+				in.args = append(in.args, "-i", "-")
 			}
 		}
 	}
@@ -93,6 +96,15 @@ func InputFile(file *os.File) InputOption {
 	return func(input *input) (err error) {
 		input.fi, err = Stat(file.Name())
 		input.file = file
+		return err
+	}
+}
+
+// InputReader will create an InputOption that reads from the reader
+// and sends the data to the ffmpeg process using STDIN
+func InputReader(reader io.Reader) InputOption {
+	return func(input *input) (err error) {
+		input.file = reader
 		return err
 	}
 }
