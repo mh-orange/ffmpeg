@@ -56,22 +56,6 @@ func (out *output) process(job *transcodeJob) error {
 		job.proc.AppendArgs(out.aCodecOptions...)
 	}
 
-	// make sure metadata isn't already mapped
-	metaMapped := false
-	for _, arg := range job.proc.Args() {
-		if arg == "-map_metadata" {
-			metaMapped = true
-		}
-	}
-
-	if !metaMapped {
-		job.proc.AppendArgs("-map_metadata", "0")
-
-		if out.vCodec == "copy" || out.aCodec == "copy" {
-			job.proc.AppendArgs("-map", "0")
-		}
-	}
-
 	if out.sCodec != "" {
 		job.proc.AppendArgs("-c:s", out.sCodec)
 	}
