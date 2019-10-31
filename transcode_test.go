@@ -8,7 +8,7 @@ import (
 )
 
 func TestTranscoderTranscode(t *testing.T) {
-	oldFfmpeg := ffmpeg
+	oldFfmpeg := Ffmpeg
 
 	tests := []struct {
 		name     string
@@ -28,7 +28,7 @@ func TestTranscoderTranscode(t *testing.T) {
 
 			tc := &cmd.TestCmd{}
 			tc.StartErr = test.startErr
-			ffmpeg = tc
+			Ffmpeg = tc
 			job, err := NewTranscoder().Transcode(option)
 			job.Cancel()
 			if err != test.startErr {
@@ -41,7 +41,7 @@ func TestTranscoderTranscode(t *testing.T) {
 		})
 	}
 
-	ffmpeg = oldFfmpeg
+	Ffmpeg = oldFfmpeg
 }
 
 func TestTranscoderRun(t *testing.T) {

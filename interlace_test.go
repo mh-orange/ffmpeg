@@ -197,7 +197,7 @@ func TestInterlaceTranscode(t *testing.T) {
 				t.Fatalf("Unexpected error: %v", err)
 			}
 			c := &cmd.TestCmd{Stderr: inputTxt}
-			ffmpeg = c
+			Ffmpeg = c
 			it := NewInterlaceTranscoder()
 			got, err := it.transcode(Input())
 

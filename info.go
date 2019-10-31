@@ -244,7 +244,7 @@ func (fi *FileInfo) UnmarshalJSON(data []byte) error {
 // Stat will pass the filename to ffprobe and parse the output.  If no error occurs, then
 // a FileInfo containing all the stream, program and format information is returned
 func Stat(filename string) (fi *FileInfo, err error) {
-	proc := ffprobe.Process()
+	proc := Ffprobe.Process()
 	proc.AppendArgs(filename)
 	logWriter := bytes.NewBuffer(nil)
 	writer := bytes.NewBuffer(nil)

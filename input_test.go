@@ -55,7 +55,7 @@ func TestInputFilename(t *testing.T) {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 	c := &cmd.TestCmd{Stdout: inputTxt}
-	ffprobe = c
+	Ffprobe = c
 
 	err = InputFilename("test.mkv")(in)
 	if err != nil {

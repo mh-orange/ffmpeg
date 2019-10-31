@@ -10,7 +10,7 @@ import (
 )
 
 func TestInfoUnmarshalJSON(t *testing.T) {
-	oldFfprobe := ffprobe
+	oldFfprobe := Ffprobe
 
 	names, err := filepath.Glob("testdata/info*.json")
 	if err != nil {
@@ -23,7 +23,7 @@ func TestInfoUnmarshalJSON(t *testing.T) {
 			if err == nil {
 				c := &cmd.TestCmd{}
 				c.Stdout = input
-				ffprobe = c
+				Ffprobe = c
 				fi, err := Stat(name)
 				if strings.HasSuffix(name, "_video.json") {
 					if !fi.IsVideo() {
@@ -46,5 +46,5 @@ func TestInfoUnmarshalJSON(t *testing.T) {
 			}
 		})
 	}
-	ffprobe = oldFfprobe
+	Ffprobe = oldFfprobe
 }

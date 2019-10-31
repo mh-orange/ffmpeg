@@ -34,7 +34,7 @@ func (transcoder *Transcoder) Transcode(options ...TranscoderOption) (TranscodeJ
 	job := &transcodeJob{
 		progressCh: make(chan TranscodeInfo, 1),
 	}
-	job.proc = ffmpeg.Process()
+	job.proc = Ffmpeg.Process()
 
 	// search input for longest duration
 	for _, option := range options {
