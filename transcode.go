@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"errors"
 	"io"
+	"strconv"
 	"strings"
 
 	"github.com/mh-orange/cmd"
@@ -87,6 +88,9 @@ type TranscodeJob interface {
 
 	// Wait will block until the underlying transcode process finishes.
 	Wait() error
+
+	// Inspect will return the full command line called (for ffmpeg)
+	Inspect() string
 }
 
 type transcodeJob struct {
@@ -100,6 +104,21 @@ type transcodeJob struct {
 	progressCh chan TranscodeInfo
 	cancelCh   chan<- struct{}
 	doneCh     <-chan struct{}
+}
+
+func (job *transcodeJob) Inspect() string {
+	builder := &strings.Builder{}
+	for i, arg := range job.proc.Args() {
+		if i > 0 {
+			builder.WriteString(" ")
+		}
+		if strings.ContainsAny(arg, " \t'\"") {
+			builder.WriteString(strconv.Quote(arg))
+		} else {
+			builder.WriteString(arg)
+		}
+	}
+	return builder.String()
 }
 
 func (job *transcodeJob) run(cancelCh chan struct{}, doneCh chan struct{}, stderr io.Reader) {

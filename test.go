@@ -11,6 +11,10 @@ type TestJob struct {
 	err      error
 }
 
+func (tj *TestJob) Inspect() string {
+	return "test job"
+}
+
 // Cancel will set the Canceled property true
 func (tj *TestJob) Cancel() {
 	tj.Canceled = true
